@@ -12,12 +12,26 @@
     ?c <- (cocina 0 platos ?numPlatosCocina)
     ?r <- (robot ?pos platos ?numPlatosRobot)
     (test (= ?pos 0))
-    (test (< ?numPlatosRobot 4)
+    (test (< ?numPlatosRobot 4))
     =>
     (retract ?c)
     (retract ?r)
-    (assert (cocina 0 platos ( - ?numPlatosCocina 1)) 
-    (assert (robot ?pos platos ( + ?numPlatosRobot 1)) 
+    (assert (cocina 0 platos (- ?numPlatosCocina 1))) 
+    (assert (robot ?pos platos (+ ?numPlatosRobot 1)))
+)
+
+(defrule servirMesa
+    ?s <- (servicio mesa ?mesa platos ?platos)
+    ?m <- (mesa ?numMesa platos ?munPlatosMesa)
+    ?r <- (robot ?pos platos ?numPlatosRobot)
+    (test (>= ?numPlatosRobot ?platos))
+    (test (= ?pos ?mesa))
+    =>
+    (retract ?s)
+    (retract ?m)
+    (retract ?r)
+    (assert (mesa ?mesa platos (+ ?munPlatosMesa ?platos)))
+    (assert (robot ?pos platos (- ?numPlatosRobot ?platos)))
 )
 
 (defrule irDerecha
@@ -26,17 +40,6 @@
     =>
     (retract ?r)
     (assert (robot (+ ?pos 1) platos ?numPlatosRobot))
-)
-
-(defrule servirMesa
-    ?m <- (mesa ?numMesa platos ?munPlatosMesa)
-    ?r <- (robot ?pos platos ?numPlatosRobot)
-    (test (>= ?numPlatosRobot 1))
-    =>
-    (retract ?m)
-    (retract ?r)
-    (assert (mesa ?numMesa platos (+ ?munPlatosMesa ?numPlatosRobot)))
-    (assert (robot ?pos platos 0))
 )
 
 (defrule irIzquierda
@@ -58,8 +61,7 @@
     (assert (robot ?pos platos ?munPlatosMesa))
 )
 
-defrule fin(
+(defrule fin
     (cocina 0 platos 6)
-    =>
-    (halt)
+    => (halt)
 )
