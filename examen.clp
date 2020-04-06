@@ -1,3 +1,5 @@
+; Joan Ciprià - 20863920E
+
 (deffacts examen
     (servir mesa 2 platos 2)
     (servir mesa 3 platos 3)
@@ -51,13 +53,13 @@
 ; --- VUELTA ---
 ; Ir a la izquierda y recoger todas las mesas que lo requieran
 (defrule recogerMesa
-    ?r <- (recoger mesa ?mesa platos ?platos)
+    ?s <- (recoger mesa ?mesa platos ?platos)
     ?m <- (mesa ?numMesa platos ?munPlatosMesa)
     ?r <- (robot ?pos platos ?numPlatosRobot)
     (test (<= ?platos (- 4 ?numPlatosRobot)))
     (test (= ?pos ?mesa))
     =>
-    (retract ?r)
+    (retract ?s)
     (retract ?m)
     (retract ?r)
     (assert (mesa ?mesa platos (- ?munPlatosMesa ?platos)))
